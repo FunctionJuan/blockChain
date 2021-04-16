@@ -50,8 +50,9 @@ class Node:
                 #tx_data is a tuple as to what get_transaction_value returns
                 tx_data = self.get_transaction_value()
                 #Using a tuple unpacker the only way to unpack this data at this point:
-                recipient, amount = tx_data            
-                if self.blockchain.add_transaction(recipient, self.wallet.public_key, amount=amount):
+                recipient, amount = tx_data   
+                signature = self.wallet.sign_transaction(self.wallet.public_key, recipient, amount)         
+                if self.blockchain.add_transaction(recipient, self.wallet.public_key,signature, amount=amount):
                     print('Transaction Added Succesfully!! ')
                 else:
                     print('Transaction has failed!!')

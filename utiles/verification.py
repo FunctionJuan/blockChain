@@ -1,5 +1,5 @@
-from hash_util import hashed_block_def, hash_the_string_256
-
+from utiles.hash_util import hashed_block_def, hash_the_string_256
+from wallet import Wallet
 class Verification:
     @staticmethod
     def valid_proof(transactions,last_hash, proof):
@@ -29,17 +29,20 @@ class Verification:
             return False    
         return True  
     @staticmethod
-    def verify_transaction(transaction, get_balance):
+    def verify_transaction(transaction, get_balance, check_funds=True):
         """Verify a transaction by checking whether the sender has sufficient coins.
 
         Arguments:
             :transaction: The transaction that should be verified.
         """
-        sender_balance = get_balance()
-        #will return of course wether true or false
-        return sender_balance >= transaction.amount
+        if  check_funds:
+            sender_balance = get_balance()
+            #will return of course wether true or false
+            return sender_balance >= transaction.amount and Wallet.verify_transaction(transaction)
+        else:
+            return Wallet.verify_transaction(transaction)
   
     @classmethod
     def verify_transaction_validity(cls, open_transactions, get_balance):
         """Verifies all open transactions."""
-        return all([cls.verify_transaction(tx, get_balance) for tx in open_transactions])
+        return all([cls.verify_transaction(tx, get_balance, False) for tx in open_transactions])

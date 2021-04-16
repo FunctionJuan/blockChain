@@ -22,7 +22,3 @@ def hashed_block_def(block):
     hashable_blockConvert = block.__dict__.copy()
     hashable_blockConvert['transactions'] = [tx.to_order_dict() for tx in hashable_blockConvert['transactions']]
     return hash_the_string_256(json.dumps(hashable_blockConvert, sort_keys=True).encode())
-
-
-
-       
