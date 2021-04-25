@@ -25,8 +25,8 @@ class Verification:
             if block.previous_hash != hashed_block_def(blockchain[index -1]):
                 return False
             if not cls.valid_proof(block.transactions[:-1], block.previous_hash, block.proof):
-             print('PROOOF of work IS INVALID')
-            return False    
+                print('PROOOF of work IS INVALID')
+                return False    
         return True  
     @staticmethod
     def verify_transaction(transaction, get_balance, check_funds=True):

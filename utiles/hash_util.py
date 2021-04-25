@@ -1,7 +1,7 @@
 import json
 import hashlib as aliasHash
 
-
+#__all__ = ['hash_the_string_256', 'hashed_block_def']
 def hash_the_string_256(string):
     """Create a SHA256 hash for a given input string.
 
@@ -22,3 +22,7 @@ def hashed_block_def(block):
     hashable_blockConvert = block.__dict__.copy()
     hashable_blockConvert['transactions'] = [tx.to_order_dict() for tx in hashable_blockConvert['transactions']]
     return hash_the_string_256(json.dumps(hashable_blockConvert, sort_keys=True).encode())
+
+
+
+       

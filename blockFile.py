@@ -1,5 +1,5 @@
 from time import time
-from printable import Printable
+from utiles.printable import Printable
 class BlockClass(Printable):
     def __init__(self, index, previous_hash, transactions, proof, time=time()):
         self.index = index
@@ -7,5 +7,3 @@ class BlockClass(Printable):
         self.timestamp = time
         self.transactions = transactions
         self.proof = proof
-
-    

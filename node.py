@@ -42,8 +42,7 @@ class Node:
             print(' 4: Check TransactionValidity..')
             print(' 5: Create a WALLET')
             print(' 6: Load Wallet' )
-            print(' 7: Save Keys' )
-            print(' h: Manipulate your chain')
+            print(' 7: Save Keys' )           
             print(' Q: Quit!!! & Output the blockchain Values...')
             user_choice = self.get_user_choice()
             if user_choice == '1':
@@ -57,7 +56,7 @@ class Node:
                 else:
                     print('Transaction has failed!!')
                     print('printing the open transactions: ')
-                    #print(self.blockchain.get_open_trans())
+                print(self.blockchain.get_open_trans())
             elif user_choice == '2':
                 if not self.blockchain.mine_block():
                     print ('Mining Failed Dude. No Wallet for you ??')
@@ -86,8 +85,7 @@ class Node:
                 print('Invalid BlockChain!!!! ')
                 #waiting_for_input = False  
                 #break out of the loop
-                break      
-            print('Choice Registered')     
+                break                       
             print('Balance of {}: {:6.2f}'.format(self.wallet.public_key, self.blockchain.get_balance())) 
         else:
             print('User Left')    
@@ -96,7 +94,7 @@ class Node:
 # Output the blockchain list to the console
    
 
-            print('Done!!!')
+        print('Done!!!')
 
 if __name__ == '__main__':
     node = Node()

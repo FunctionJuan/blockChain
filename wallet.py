@@ -1,10 +1,12 @@
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
-from Crypto.Hash import SHA256
+from Crypto.Hash import SHA1
+import Crypto.Hash
 import Crypto.Random
 import binascii
 
 class Wallet:
+    """Creates, loads and holds private and public keys."""
     def __init__(self):    
         self.private_key = None
         self.public_key = None
@@ -16,13 +18,13 @@ class Wallet:
      
 
     def save_keys(self):
-           if self.public_key != None and self.private_key != None:
-                try:
-                    with open('wallet.txt', mode='w') as theFile:
-                        theFile.Write(self.public_key)
-                        theFile.write('\n')
-                        theFile.write(self.private_key)
-                except(IOError, IndexError):
+        if self.public_key != None and self.private_key != None:
+            try:
+                with open('wallet.txt', mode='w') as theFile:
+                    theFile.Write(self.public_key)
+                    theFile.write('\n')
+                    theFile.write(self.private_key)
+            except(IOError, IndexError):
                     print('Saving Wallet failed!!!!')
 
     def load_keys(self):
@@ -39,12 +41,12 @@ class Wallet:
     def generate_keys(self):
         private_key = RSA.generate(1024, Crypto.Random.new().read)
         public_key = private_key.publickey()
-        return(binascii.hex(private_key.exportKey(format='DER')).decode('ascii'),binascii.hex(public_key.exportKey(format='DER')).decode('ascii'))
+        return(binascii.hexlify(private_key.exportKey(format='DER')).decode('ascii'),binascii.hexlify(public_key.exportKey(format='DER')).decode('ascii'))
 
 
     def sign_transaction(self,sender, recipient, amount):
-        signer = PKCS1_v1_5.new(RSA.importKey/(binascii.unhexlify(self.private_key)))
-        h= SHA256.new((str(sender) + str(recipient) + str(amount)).encode('utf'))
+        signer = PKCS1_v1_5.new(RSA.importKey(binascii.unhexlify(self.private_key)))
+        h= SHA1.new((str(sender) + str(recipient) + str(amount)).encode('utf8'))
         signature = signer.sign(h)
         return binascii.hexlify(signature).decode('ascii')
     @staticmethod
@@ -52,5 +54,5 @@ class Wallet:
    
         public_key = RSA.importKey(binascii.unhexlify(transaction.sender))
         verifier = PKCS1_v1_5.new(public_key)
-        h= SHA256.new((str(transaction.sender) + str(transaction.recipient) + str(transaction.amount)).encode('utf8'))
+        h= SHA1.new((str(transaction.sender) + str(transaction.recipient) + str(transaction.amount)).encode('utf8'))
         return verifier.verify(h, binascii.unhexlify(transaction.signature))

@@ -2,7 +2,7 @@ from functools import reduce
 import hashlib as aliasHash
 import json
 import pickle
-
+# Import two functions from our hash_util.py file. Omit the ".py" in the import
 from utiles.hash_util import hashed_block_def
 from utiles.verification import Verification
 from blockFile import BlockClass
@@ -10,6 +10,9 @@ from transaction import Transaction
 from wallet import Wallet
 #CONSTANT:
 MINING_REWARD = 8
+
+print(__name__)
+
 class BlockCHAIN:
     def __init__(self, hosting_node_id):
         #Our Starting blokc for the blockchain
@@ -25,6 +28,7 @@ class BlockCHAIN:
     @property
     def chain(self):
         return self.__chain[:]
+
     @chain.setter
     def chain(self, val):
         self.__chain = val
@@ -36,7 +40,7 @@ class BlockCHAIN:
     def load_data(self):
     
         try:
-            with open('\\OneDrive\\LiveWKSP\\Python\\MaxSPracticalGuide\\filesCreatedFromPython\\blockChain.txt', mode='r') as fileVariable:
+            with open('\\***************', mode='r') as fileVariable:
                 file_content =  fileVariable.readlines()
                 #file_content = pickle.loads(fileVariable.read()) 
                 # blockchain = file_content['chain']
@@ -49,19 +53,21 @@ class BlockCHAIN:
                     updated_blockchain.append(updated_block)         
                 self.chain = updated_blockchain    
                 open_transactions= json.loads(file_content[1])
+                # We need to convert  the loaded data because Transactions should use OrderedDict
                 updated_transactions = []
                 for tx in open_transactions:
                     updated_transaction = Transaction(tx['sender'], tx['recipient'],tx['signature'],tx['amount'])
                     updated_transactions.append(updated_transaction)
                 self.__open_transactions = updated_transactions  
         except (IOError, IndexError):           
-           print('Handled EXCEPTION')
+            pass  
+         #print('Handled EXCEPTION')
         finally:
             print('CLEANUP!!!')             
 
     def save_data(self):
         try:
-            with open('\\OneDrive\\LiveWKSP\\Python\\MaxSPracticalGuide\\filesCreatedFromPython\\blockChain.txt', mode='w') as fileVariable:
+            with open('\\***************************', mode='w') as fileVariable:
                 saveable_chain = [block.__dict__ for block in [BlockClass(block_el.index, block_el.previous_hash, [tx.__dict__ for tx in block_el.transactions],block_el.proof, block_el.timestamp) for block_el in self.__chain]]
                 print('THIS SHOULD BE SAVEABLE', saveable_chain)
                 fileVariable.write(json.dumps(saveable_chain))
