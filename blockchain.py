@@ -40,7 +40,7 @@ class BlockCHAIN:
     def load_data(self):
     
         try:
-            with open('\\***************', mode='r') as fileVariable:
+            with open('\\OneDrive************************', mode='r') as fileVariable:
                 file_content =  fileVariable.readlines()
                 #file_content = pickle.loads(fileVariable.read()) 
                 # blockchain = file_content['chain']
@@ -67,7 +67,7 @@ class BlockCHAIN:
 
     def save_data(self):
         try:
-            with open('\\***************************', mode='w') as fileVariable:
+            with open('\\OneDrive*********************', mode='w') as fileVariable:
                 saveable_chain = [block.__dict__ for block in [BlockClass(block_el.index, block_el.previous_hash, [tx.__dict__ for tx in block_el.transactions],block_el.proof, block_el.timestamp) for block_el in self.__chain]]
                 print('THIS SHOULD BE SAVEABLE', saveable_chain)
                 fileVariable.write(json.dumps(saveable_chain))
@@ -96,6 +96,8 @@ class BlockCHAIN:
     def get_balance(self):
         """Calculate and return the balance for a participant.
         """
+        if self.hosting_node == None:
+            return None
         participant = self.hosting_node
         tx_sender = [[tx.amount for tx in block.transactions if tx.sender == participant] for block in self.__chain]
         open_tx_sender = [tx.amount for tx in self.__open_transactions if tx.sender == participant]
@@ -153,7 +155,7 @@ class BlockCHAIN:
         """Create a new block and add open transactions to it."""
         #add a dictionary with a previous hash key
         if self.hosting_node == None:
-            return False
+            return None
         last_block = self.__chain[-1]
         print('This is the BlockChain as a WHULE', self.__chain)    
         print('AND This is the last_block Or how We are calling it last_block Variable', last_block)       
@@ -169,7 +171,7 @@ class BlockCHAIN:
         copied_transactions = self.__open_transactions [:]
         for tx in copied_transactions:
            if not Wallet.verify_transaction(tx):
-               return False 
+               return None 
         copied_transactions.append(reward_transaction)
         block = BlockClass(len(self.__chain), hashed_block, copied_transactions, proof)
        
@@ -180,7 +182,7 @@ class BlockCHAIN:
         print('AND this is the BLOCKCHAIN AFTER ALL APPEND', self.__chain)
         self.__open_transactions = []
         self.save_data()
-        return True
+        return block
 
 
 
