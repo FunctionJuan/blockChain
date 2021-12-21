@@ -37,13 +37,13 @@ class Node:
         while waiting_for_input:
             print('Please Choose : ')
             print(' 1: Add a new Transaction Value ')
-            print(' 2: Mine a NEW block')
+            print(' 2: Mine a new block')
             print(' 3: Output the blockchain Values...')
-            print(' 4: Check TransactionValidity..')
-            print(' 5: Create a WALLET')
+            print(' 4: Check Transaction Validity..')
+            print(' 5: Create a Wallet')
             print(' 6: Load Wallet' )
             print(' 7: Save Keys' )           
-            print(' Q: Quit!!! & Output the blockchain Values...')
+            print(' Q: Quit! & Output the blockchain Values...')
             user_choice = self.get_user_choice()
             if user_choice == '1':
                 #tx_data is a tuple as to what get_transaction_value returns
