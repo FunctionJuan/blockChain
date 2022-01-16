@@ -1,3 +1,5 @@
+#from crypt import methods
+from urllib import response
 from flask import Flask, jsonify,request, send_from_directory
 from flask_cors import CORS
 from wallet import Wallet   
@@ -10,9 +12,12 @@ CORS(aplicacion)
 
 
 @aplicacion.route('/', methods=['GET'])
-def get_ui():
+def get_node_ui():
     return send_from_directory('ui', 'node.html')
 
+@aplicacion.route('/network', methods=['GET'])
+def get_network_ui():
+    return send_from_directory('ui', 'network.html')
 
 @aplicacion.route('/wallet', methods=['POST'])
 def create_keys():
@@ -142,6 +147,50 @@ def get_chain():
     for dict_block in dictionaryChain:
         dict_block['transactions'] = [tx.__dict__ for tx in dict_block['transactions']]
     return jsonify(dictionaryChain), 200
+
+@aplicacion.route('/nodo', methods=['POST'])
+def add_node():
+    values = request.get_json()
+    if not values:
+        response = {
+            'message' : 'No Data Attached'
+        }
+        return jsonify(response), 400
+    if 'node' not in values:
+        response = {
+            'message' : 'No node data found'
+        }
+        return jsonify(response), 400
+    node = values.get('node')
+    blockchain.add_peer_node(node)
+    response =  {
+            'message' : 'Node added succesfully',
+            'all_nodes' : blockchain.get_peer_nodes()
+        }
+    return jsonify(response), 201  
+
+#remember for DELETE better to encode this as URI parameter you mark it down in flask as: <>
+@aplicacion.route('/nodo/<node_uri>', methods=['DELETE'])
+def remove_node(node_uri):
+    if node_uri == '' or node_uri == None:
+        response = {
+            'message': 'no node found.'
+        }
+        return jsonify(response), 400
+    blockchain.remove_peer_nodes(node_uri)
+    response = {
+        'message': 'Noded removed',
+        'all_nodes': blockchain.get_peer_nodes()
+        }
+    return jsonify(response), 200
+
+@aplicacion.route('/returnNodes', methods=['GET'])
+def get_nodes():
+    nodes= blockchain.get_peer_nodes()
+    response = {
+        'all_nodes': nodes
+    }
+    return jsonify(response), 200
 
 if __name__ == '__main__':
     aplicacion.run(host= '0.0.0.0', port=7000)
